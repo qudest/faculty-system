@@ -3,6 +3,7 @@ package ru.vsu.cs.faculty.system.storage.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.vsu.cs.faculty.system.dto.StudentCreationDto;
 import ru.vsu.cs.faculty.system.storage.enums.EducationForm;
 import ru.vsu.cs.faculty.system.storage.enums.AcademicDegree;
 
@@ -15,6 +16,16 @@ import ru.vsu.cs.faculty.system.storage.enums.AcademicDegree;
 @Entity
 @Table(name = "student")
 public class Student {
+
+    public Student(StudentCreationDto studentCreationDto) {
+        this.name = studentCreationDto.getName();
+        this.email = studentCreationDto.getEmail();
+        this.phone = studentCreationDto.getPhone();
+        this.academicDegree = studentCreationDto.getAcademicDegree();
+        this.educationForm = studentCreationDto.getEducationForm();
+        this.course = studentCreationDto.getCourse();
+        this.team = studentCreationDto.getTeam();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_id_seq")

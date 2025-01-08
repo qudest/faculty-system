@@ -10,17 +10,23 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.cs.faculty.system.dto.FacultyCreationDto;
+import ru.vsu.cs.faculty.system.storage.entity.Department;
 import ru.vsu.cs.faculty.system.storage.entity.Faculty;
+import ru.vsu.cs.faculty.system.storage.repository.DepartmentRepository;
 import ru.vsu.cs.faculty.system.storage.repository.FacultyRepository;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/faculties")
 public class FacultyController {
 
     private final FacultyRepository facultyRepository;
+    private final DepartmentRepository departmentRepository;
 
-    public FacultyController(FacultyRepository facultyRepository) {
+    public FacultyController(FacultyRepository facultyRepository, DepartmentRepository departmentRepository) {
         this.facultyRepository = facultyRepository;
+        this.departmentRepository = departmentRepository;
     }
 
     @GetMapping({"", "/"})
@@ -105,6 +111,12 @@ public class FacultyController {
     public String deleteFaculty(@RequestParam Long id) {
         facultyRepository.deleteById(id);
         return "redirect:/faculties";
+    }
+
+    @GetMapping("/{id}/departments")
+    @ResponseBody
+    public List<Department> getSpecialitiesByFacultyId(@PathVariable Long id) {
+        return departmentRepository.findAllByFaculty_Id((id));
     }
 
 }
