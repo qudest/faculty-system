@@ -3,6 +3,7 @@ package ru.vsu.cs.faculty.system.storage.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.vsu.cs.faculty.system.dto.FacultyCreationDto;
 
 @Getter
 @Setter
@@ -13,6 +14,13 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Table(name = "faculty")
 public class Faculty {
+
+    public Faculty(FacultyCreationDto facultyCreationDto) {
+        this.name = facultyCreationDto.getName();
+        this.headName = facultyCreationDto.getHeadName();
+        this.email = facultyCreationDto.getEmail();
+        this.phone = facultyCreationDto.getPhone();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "faculty_id_seq")
