@@ -55,7 +55,7 @@ public class StudentController {
     }
 
     @PostMapping("/create")
-    public String createFaculty(@Valid @ModelAttribute("student") StudentCreationDto studentCreationDto, BindingResult result, Model model) {
+    public String createStudent(@Valid @ModelAttribute("student") StudentCreationDto studentCreationDto, BindingResult result, Model model) {
         if (studentRepository.existsByEmail(studentCreationDto.getEmail())) {
             result.rejectValue("email", "email", "Такой email уже существует");
         }
@@ -86,7 +86,7 @@ public class StudentController {
     }
 
     @PostMapping("/edit")
-    public String editFaculty(Model model, @RequestParam Long id, @Valid @ModelAttribute("edited") StudentCreationDto studentCreationDto, BindingResult result) {
+    public String editStudent(Model model, @RequestParam Long id, @Valid @ModelAttribute("edited") StudentCreationDto studentCreationDto, BindingResult result) {
         try {
             Student original = studentRepository.findById(id).get();
             model.addAttribute("original", original);
@@ -108,13 +108,14 @@ public class StudentController {
 
         Student edited = new Student(studentCreationDto);
         edited.setId(id);
+        edited.setDepartment(departmentRepository.findById(studentCreationDto.getDepartmentId()).get());
         studentRepository.save(edited);
 
         return "redirect:/students";
     }
 
     @GetMapping("/delete")
-    public String deleteFaculty(@RequestParam Long id) {
+    public String deleteStudent(@RequestParam Long id) {
         studentRepository.deleteById(id);
         return "redirect:/students";
     }
