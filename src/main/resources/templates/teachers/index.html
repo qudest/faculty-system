@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>departments</title>
+    <title>Teachers</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
@@ -16,23 +16,30 @@
         <a class="btn btn-outline-primary mx-2" href="/students">Студенты</a>
     </div>
 
-    <h1 class="text-center my-4">Кафедры</h1>
+    <h1 class="text-center my-4">Преподаватели</h1>
 
     <div class="d-flex justify-content-between mb-3">
-        <a class="btn btn-primary" href="/departments/create">Добавить</a>
-        <form method="get" action="/departments" class="d-flex">
+        <a class="btn btn-primary" href="/teachers/create">Добавить</a>
+        <form method="get" action="/teachers" class="d-flex">
             <div class="row g-2">
                 <div class="col">
                     <select class="form-control" name="searchColumn">
-                        <option value="name" th:selected="${searchColumn == 'name'}">Название</option>
-                        <option value="headName" th:selected="${searchColumn == 'headName'}">Руководитель</option>
+                        <option value="name" th:selected="${searchColumn == 'name'}">Имя</option>
                         <option value="email" th:selected="${searchColumn == 'email'}">Email</option>
                         <option value="phone" th:selected="${searchColumn == 'phone'}">Телефон</option>
+                        <option value="academicDegree" th:selected="${searchColumn == 'academicDegree'}">Академическая
+                            степень
+                        </option>
+                        <option value="position" th:selected="${searchColumn == 'position'}">Должность
+                        </option>
+                        <option value="experience" th:selected="${searchColumn == 'experience'}">Стаж</option>
                         <option value="faculty" th:selected="${searchColumn == 'faculty'}">Факультет</option>
+                        <option value="department" th:selected="${searchColumn == 'department'}">Кафедра</option>
                     </select>
                 </div>
                 <div class="col">
-                    <input type="text" class="form-control" name="searchValue" placeholder="Поиск" th:value="${searchValue}">
+                    <input type="text" class="form-control" name="searchValue" placeholder="Поиск"
+                           th:value="${searchValue}">
                 </div>
                 <div class="col">
                     <button type="submit" class="btn btn-primary">Поиск</button>
@@ -47,23 +54,29 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>Название</th>
-            <th>Руководитель</th>
+            <th>Имя</th>
             <th>Email</th>
             <th>Телефон</th>
+            <th>Академическая степень</th>
+            <th>Должность</th>
+            <th>Стаж</th>
             <th>Факультет</th>
+            <th>Кафедра</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="department : ${departments}">
+        <tr th:each="teacher : ${teachers}">
             <td>
-                <a th:href="@{/departments/edit(id=${department.id})}" th:text="${department.id}"></a>
+                <a th:href="@{/teachers/edit(id=${teacher.id})}" th:text="${teacher.id}"></a>
             </td>
-            <td th:text="${department.name}"></td>
-            <td th:text="${department.headName}"></td>
-            <td th:text="${department.email}"></td>
-            <td th:text="${department.phone}"></td>
-            <td th:text="${department.faculty.name}"></td>
+            <td th:text="${teacher.name}"></td>
+            <td th:text="${teacher.email}"></td>
+            <td th:text="${teacher.phone}"></td>
+            <td th:text="${teacher.academicDegree}"></td>
+            <td th:text="${teacher.position}"></td>
+            <td th:text="${teacher.experience}"></td>
+            <td th:text="${teacher.department.faculty.name}"></td>
+            <td th:text="${teacher.department.name}"></td>
         </tr>
         </tbody>
     </table>
@@ -73,19 +86,19 @@
     <ul class="pagination justify-content-center">
         <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
             <a class="page-link"
-               th:href="@{/departments(page=${currentPage - 1}, size=${size})}"
+               th:href="@{/teachers(page=${currentPage - 1}, size=${size})}"
                th:if="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">Предыдущая</a>
             <a class="page-link"
-               th:href="@{/departments(page=${currentPage - 1}, size=${size}, searchColumn=${searchColumn}, searchValue=${searchValue})}"
+               th:href="@{/teachers(page=${currentPage - 1}, size=${size}, searchColumn=${searchColumn}, searchValue=${searchValue})}"
                th:unless="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">Предыдущая</a>
         </li>
 
         <li class="page-item" th:if="${currentPage > 2}">
             <a class="page-link"
-               th:href="@{/departments(page=0, size=${size})}"
+               th:href="@{/teachers(page=0, size=${size})}"
                th:if="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">1</a>
             <a class="page-link"
-               th:href="@{/departments(page=0, size=${size}, searchColumn=${searchColumn}, searchValue=${searchValue})}"
+               th:href="@{/teachers(page=0, size=${size}, searchColumn=${searchColumn}, searchValue=${searchValue})}"
                th:unless="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">1</a>
         </li>
 
@@ -98,11 +111,11 @@
             th:if="${i >= 0} and ${i < totalPages}"
             th:classappend="${i == currentPage} ? 'active'">
             <a class="page-link"
-               th:href="@{/departments(page=${i}, size=${size})}"
+               th:href="@{/teachers(page=${i}, size=${size})}"
                th:if="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}"
                th:text="${i + 1}">1</a>
             <a class="page-link"
-               th:href="@{/departments(page=${i}, size=${size}, searchColumn=${searchColumn}, searchValue=${searchValue})}"
+               th:href="@{/teachers(page=${i}, size=${size}, searchColumn=${searchColumn}, searchValue=${searchValue})}"
                th:unless="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}"
                th:text="${i + 1}">1</a>
         </li>
@@ -113,27 +126,25 @@
 
         <li class="page-item" th:if="${currentPage < totalPages - 3}">
             <a class="page-link"
-               th:href="@{/departments(page=${totalPages - 1}, size=${size})}"
+               th:href="@{/teachers(page=${totalPages - 1}, size=${size})}"
                th:if="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}"
                th:text="${totalPages}">1</a>
             <a class="page-link"
-               th:href="@{/departments(page=${totalPages - 1}, size=${size}, searchColumn=${searchColumn}, searchValue=${searchValue})}"
+               th:href="@{/teachers(page=${totalPages - 1}, size=${size}, searchColumn=${searchColumn}, searchValue=${searchValue})}"
                th:unless="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}"
                th:text="${totalPages}">1</a>
         </li>
 
         <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
             <a class="page-link"
-               th:href="@{/departments(page=${currentPage + 1}, size=${size})}"
+               th:href="@{/teachers(page=${currentPage + 1}, size=${size})}"
                th:if="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">Следующая</a>
             <a class="page-link"
-               th:href="@{/departments(page=${currentPage + 1}, size=${size}, searchColumn=${searchColumn}, searchValue=${searchValue})}"
+               th:href="@{/teachers(page=${currentPage + 1}, size=${size}, searchColumn=${searchColumn}, searchValue=${searchValue})}"
                th:unless="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">Следующая</a>
         </li>
     </ul>
 </nav>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

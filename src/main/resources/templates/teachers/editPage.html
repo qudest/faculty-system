@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto rounded border p-4 m-4">
+            <h2 class="text-center mb-5">Редактировать преподавателя</h2>
+
+            <form method="post" enctype="multipart/form-data" th:object="${edited}">
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">ID</label>
+                    <div class="col-sm-8">
+                        <input class="form-control-plaintext" th:value="${original.id}" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Имя</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" th:field="${original.name}">
+                        <p th:if="${#fields.hasErrors('name')}" th:errorclass="text-danger"
+                           th:errors="*{name}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Email</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" th:field="${original.email}">
+                        <p th:if="${#fields.hasErrors('email')}" th:errorclass="text-danger"
+                           th:errors="*{email}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Телефон</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" th:field="${original.phone}">
+                        <p th:if="${#fields.hasErrors('phone')}" th:errorclass="text-danger"
+                           th:errors="*{phone}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Академическая степень</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" th:field="${original.academicDegree}">
+                            <option value="" disabled selected>Выберите академическую степень</option>
+                            <option th:each="degree : ${T(ru.vsu.cs.faculty.system.storage.enums.AcademicDegree).values()}"
+                                    th:value="${degree}" th:text="${degree}">Degree
+                            </option>
+                        </select>
+                        <p th:if="${#fields.hasErrors('academicDegree')}" th:errorclass="text-danger"
+                           th:errors="*{academicDegree}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Должгость</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" th:field="${original.position}">
+                            <option value="" disabled selected>Выберите должность</option>
+                            <option th:each="form : ${T(ru.vsu.cs.faculty.system.storage.enums.Position).values()}"
+                                    th:value="${form}" th:text="${form}">Form
+                            </option>
+                        </select>
+                        <p th:if="${#fields.hasErrors('position')}" th:errorclass="text-danger"
+                           th:errors="*{position}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Стаж</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" th:field="${original.experience}">
+                        <p th:if="${#fields.hasErrors('experience')}" th:errorclass="text-danger"
+                           th:errors="*{experience}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Факультет</label>
+                    <div class="col-sm-8">
+                        <select class="form-select" th:field="*{facultyId}" id="facultySelect" onchange="update()">
+                            <option th:each="faculty : ${faculties}"
+                                    th:value="${faculty.id}"
+                                    th:text="${faculty.name}"></option>
+                        </select>
+                        <p th:if="${#fields.hasErrors('facultyId')}"
+                           th:errorclass="text-danger"
+                           th:errors="*{facultyId}"></p>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label">Кафедра</label>
+                    <div class="col-sm-8">
+                        <select class="form-select" th:field="*{departmentId}" id="departmentSelect"></select>
+                        <p th:if="${#fields.hasErrors('departmentId')}"
+                           th:errorclass="text-danger"
+                           th:errors="*{departmentId}"></p>
+                    </div>
+                </div>
+
+                <script>
+                    function update() {
+                        const facultyId = document.getElementById('facultySelect').value;
+                        const departmentSelect = document.getElementById('departmentSelect');
+
+                        departmentSelect.innerHTML = '<option value="">Loading...</option>';
+
+                        fetch(`/faculties/${facultyId}/departments`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Нет доступных кафедр');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                departmentSelect.innerHTML = '';
+
+                                if (data.length === 0) {
+                                    departmentSelect.innerHTML = '<option value="">Нет доступных кафедр</option>';
+                                    return;
+                                }
+
+                                data.forEach(specialty => {
+                                    const option = document.createElement('option');
+                                    option.value = specialty.id;
+                                    option.text = specialty.name;
+                                    departmentSelect.appendChild(option);
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                departmentSelect.innerHTML = '<option value="">Нет доступных кафедр</option>';
+                            });
+                    }
+
+                    document.addEventListener('DOMContentLoaded', function() {
+                        update();
+                    });
+                </script>
+
+                <div class="row mb-3">
+                    <div class="col d-flex justify-content-center gap-3">
+                        <button type="submit" class="btn btn-primary">Изменить</button>
+                        <a class="btn btn-danger" th:href="@{/teachers/delete(id=${original.id})}"
+                           onclick="return confirm('Вы уверены?')">Удалить</a>
+                        <a class="btn btn-outline-primary" href="/teachers" role="button">Отменить</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

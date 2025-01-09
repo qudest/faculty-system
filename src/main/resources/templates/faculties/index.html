@@ -71,10 +71,10 @@
         <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
             <a class="page-link"
                th:href="@{/faculties(page=${currentPage - 1}, size=${size})}"
-               th:if="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">Previous</a>
+               th:if="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">Предыдущая</a>
             <a class="page-link"
                th:href="@{/faculties(page=${currentPage - 1}, size=${size}, searchColumn=${searchColumn}, searchValue=${searchValue})}"
-               th:unless="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">Previous</a>
+               th:unless="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">Предыдущая</a>
         </li>
 
         <li class="page-item" th:if="${currentPage > 2}">
@@ -122,10 +122,10 @@
         <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
             <a class="page-link"
                th:href="@{/faculties(page=${currentPage + 1}, size=${size})}"
-               th:if="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">Next</a>
+               th:if="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">Следующая</a>
             <a class="page-link"
                th:href="@{/faculties(page=${currentPage + 1}, size=${size}, searchColumn=${searchColumn}, searchValue=${searchValue})}"
-               th:unless="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">Next</a>
+               th:unless="${#strings.isEmpty(searchColumn) and #strings.isEmpty(searchValue)}">Следующая</a>
         </li>
     </ul>
 </nav>
