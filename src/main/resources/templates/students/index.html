@@ -74,8 +74,8 @@
             <td th:text="${student.name}"></td>
             <td th:text="${student.email}"></td>
             <td th:text="${student.phone}"></td>
-            <td th:text="${student.academicDegree}"></td>
-            <td th:text="${student.educationForm}"></td>
+            <td th:text="${student.academicDegree.getName()}"></td>
+            <td th:text="${student.educationForm.getName()}"></td>
             <td th:text="${student.course}"></td>
             <td th:text="${student.team}"></td>
             <td th:text="${student.department.faculty.name}"></td>

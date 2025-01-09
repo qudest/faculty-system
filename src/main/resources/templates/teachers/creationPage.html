@@ -48,7 +48,7 @@
                         <select class="form-control" th:field="*{academicDegree}">
                             <option value="" disabled selected>Выберите академическую степень</option>
                             <option th:each="degree : ${T(ru.vsu.cs.faculty.system.storage.enums.AcademicDegree).values()}"
-                                    th:value="${degree}" th:text="${degree}">Degree
+                                    th:value="${degree}" th:text="${degree.getName()}">Degree
                             </option>
                         </select>
                         <p th:if="${#fields.hasErrors('academicDegree')}" th:errorclass="text-danger"
@@ -61,8 +61,8 @@
                     <div class="col-sm-8">
                         <select class="form-control" th:field="*{position}">
                             <option value="" disabled selected>Выберите должность</option>
-                            <option th:each="form : ${T(ru.vsu.cs.faculty.system.storage.enums.Position).values()}"
-                                    th:value="${form}" th:text="${form}">Form
+                            <option th:each="position : ${T(ru.vsu.cs.faculty.system.storage.enums.Position).values()}"
+                                    th:value="${position}" th:text="${position.getName()}">Form
                             </option>
                         </select>
                         <p th:if="${#fields.hasErrors('position')}" th:errorclass="text-danger"

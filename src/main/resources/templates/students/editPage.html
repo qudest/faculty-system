@@ -55,7 +55,7 @@
                         <select class="form-control" th:field="${original.academicDegree}">
                             <option value="" disabled selected>Выберите академическую степень</option>
                             <option th:each="degree : ${T(ru.vsu.cs.faculty.system.storage.enums.AcademicDegree).values()}"
-                                    th:value="${degree}" th:text="${degree}">Degree
+                                    th:value="${degree}" th:text="${degree.getName()}">Degree
                             </option>
                         </select>
                         <p th:if="${#fields.hasErrors('academicDegree')}" th:errorclass="text-danger"
@@ -69,7 +69,7 @@
                         <select class="form-control" th:field="${original.educationForm}">
                             <option value="" disabled selected>Выберите форму обучения</option>
                             <option th:each="form : ${T(ru.vsu.cs.faculty.system.storage.enums.EducationForm).values()}"
-                                    th:value="${form}" th:text="${form}">Form
+                                    th:value="${form}" th:text="${form.getName()}">Form
                             </option>
                         </select>
                         <p th:if="${#fields.hasErrors('educationForm')}" th:errorclass="text-danger"
